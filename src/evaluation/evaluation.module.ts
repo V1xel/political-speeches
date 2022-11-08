@@ -7,15 +7,15 @@ import { EvaluationService } from './evaluation.service'
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env' }),
-    // BullModule.forRootAsync({
-    //   useFactory: async (configService: ConfigService) => ({
-    //     redis: {
-    //       host: configService.getOrThrow('REDIS_HOST'),
-    //       port: parseInt(configService.getOrThrow('REDIS_PORT')),
-    //       password: configService.getOrThrow('REDIS_PASSWORD'),
-    //     },
-    //   }),
-    // }),
+    BullModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        redis: {
+          host: configService.getOrThrow('REDIS_HOST'),
+          port: parseInt(configService.getOrThrow('REDIS_PORT')),
+          password: configService.getOrThrow('REDIS_PASSWORD'),
+        },
+      }),
+    }),
   ],
   controllers: [EvaluationController],
   providers: [EvaluationService],
