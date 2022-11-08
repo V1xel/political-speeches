@@ -18,7 +18,15 @@ export class Speech {
     return this._args.Topic
   }
 
+  public get Words(): number {
+    return this._args.Words
+  }
+
   public HasInternalSecurityTopic(): boolean {
     return this.Topic === Speech.InternalSecurity
+  }
+
+  public GetYear(): number {
+    return this._args.Date.getFullYear()
   }
 }
