@@ -1,0 +1,36 @@
+version: '3.5'
+
+services:
+  political_speaches:
+    container_name: app_service
+    image: node
+    working_dir: /app/src/service
+    command: bash -c "npm install && npm start"
+    volumes:
+      - .:/app/src/service
+      - /app/src/service/node_modules
+    ports:
+      - 3000:3000
+    networks:
+      - redis
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:6.2.7-bullseye
+    container_name: redis
+    command:
+      - /bin/sh
+      - -c
+      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    networks:
+      - redis
+    ports:
+      - 6379:6379
+    env_file:
+      - .env
+
+networks:
+  redis:
