@@ -2,6 +2,7 @@ import { Processor, Process, InjectQueue } from '@nestjs/bull'
 import { Job, Queue } from 'bull'
 import { EvaluationService } from './evaluation.service'
 import IQueueElement from 'src/interfaces/queue-element'
+import { EvaluationGateway } from './evaluation.gateway'
 
 @Processor('speech')
 export class EvaluationProcessor {
@@ -14,6 +15,9 @@ export class EvaluationProcessor {
   async handle(job: Job<IQueueElement>): Promise<void> {
     const { uuid, urls } = job.data
     const result = await this.evaluationService.evaluate(urls)
-    this.evaluationQueue.emit(`evaluation-finished-${uuid}`, result)
+    this.evaluationQueue.emit(
+      EvaluationGateway.GetEvaluationFinishedEventName(uuid),
+      result,
+    )
   }
 }

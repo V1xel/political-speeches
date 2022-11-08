@@ -5,7 +5,6 @@ export interface ISpeechArgs {
   Words: number
 }
 
-// Layer for the domain validation
 export class Speech {
   public static readonly InternalSecurity = 'Internal Security'
   constructor(private _args: ISpeechArgs) {}

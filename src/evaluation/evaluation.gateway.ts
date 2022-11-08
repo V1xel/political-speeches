@@ -14,6 +14,9 @@ import { Socket } from 'socket.io'
   },
 })
 export class EvaluationGateway {
+  public static GetEvaluationFinishedEventName = (uuid: string): string =>
+    `evaluation-finished-${uuid}`
+
   constructor(@InjectQueue('evaluation') private evaluationQueue: Queue) {}
 
   @SubscribeMessage('identity')
@@ -21,6 +24,9 @@ export class EvaluationGateway {
     @MessageBody() data: string,
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
-    this.evaluationQueue.addListener(`evaluation-finished-${data}`, client.send)
+    this.evaluationQueue.addListener(
+      EvaluationGateway.GetEvaluationFinishedEventName(data),
+      client.send,
+    )
   }
 }

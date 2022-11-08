@@ -4,7 +4,6 @@ export interface ISpeakerArgs {
   Name: string
 }
 
-// Layer for the domain validation
 export class Speaker {
   constructor(private _args: ISpeakerArgs) {}
   private _speechTotal = 0
