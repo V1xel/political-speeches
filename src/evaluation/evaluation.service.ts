@@ -27,6 +27,8 @@ export class EvaluationService {
       await CSVParser.parse(filePath, evaluator.AddSpeakerData)
     }
 
+    await CSVLoader.clear()
+
     return evaluator.GetResult()
   }
 }
