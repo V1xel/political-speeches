@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { BullModule } from '@nestjs/bull'
-import { SpeachController } from './speach.controller'
-import { SpeachService } from './speach.service'
+import { SpeechController } from './speech.controller'
+import { SpeechService } from './speech.service'
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { SpeachService } from './speach.service'
       }),
     }),
   ],
-  controllers: [SpeachController],
-  providers: [SpeachService],
+  controllers: [SpeechController],
+  providers: [SpeechService],
 })
-export class AppModule {}
+export class SpeechModule {}

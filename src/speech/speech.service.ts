@@ -3,7 +3,7 @@ import { InjectQueue } from '@nestjs/bull'
 import { Queue } from 'bull'
 
 @Injectable()
-export class SpeachService {
+export class SpeechService {
   constructor(@InjectQueue('audio') private speachQueue: Queue) {}
 
   async enqueue(urls: string[]): Promise<void> {

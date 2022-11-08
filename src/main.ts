@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core'
-import { AppModule } from './speach/speach.module'
+import { SpeechModule } from './speech/speech.module'
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(SpeechModule)
   await app.listen(3000)
 }
 

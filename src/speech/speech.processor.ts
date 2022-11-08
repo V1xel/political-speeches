@@ -1,8 +1,8 @@
 import { Processor, Process } from '@nestjs/bull'
 import { Job } from 'bull'
 
-@Processor('speach')
-export class SpeachProcessor {
+@Processor('speech')
+export class SpeechProcessor {
   @Process()
   async handle(job: Job<string>): Promise<null> {
     let progress = 0
