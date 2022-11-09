@@ -1,32 +1,32 @@
 import { InjectQueue } from '@nestjs/bull'
 import {
-  MessageBody,
-  ConnectedSocket,
-  SubscribeMessage,
   WebSocketGateway,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  ConnectedSocket,
 } from '@nestjs/websockets'
 import { Queue } from 'bull'
-import { Socket } from 'socket.io'
+import { WebSocket } from 'ws'
 
 @WebSocketGateway({
   cors: {
     origin: '*',
   },
 })
-export class EvaluationGateway {
-  public static GetEvaluationFinishedEventName = (uuid: string): string =>
-    `evaluation-finished-${uuid}`
+export class EvaluationGateway
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
+  // constructor(@InjectQueue('evaluation') private evaluationQueue: Queue) {}
 
-  constructor(@InjectQueue('evaluation') private evaluationQueue: Queue) {}
-
-  @SubscribeMessage('identity')
-  async OnEvaluationFinished(
-    @MessageBody() data: string,
-    @ConnectedSocket() client: Socket,
-  ): Promise<void> {
-    this.evaluationQueue.addListener(
-      EvaluationGateway.GetEvaluationFinishedEventName(data),
-      client.send,
+  async handleConnection(@ConnectedSocket() client: WebSocket): Promise<void> {
+    client.on('message', (buffer) =>
+      this.handleMessage(JSON.parse(buffer.toString())),
     )
   }
+
+  handleMessage({ event, uuid }: { event: string; uuid: string }): void {
+    
+  }
+
+  async handleDisconnect(): Promise<void> {}
 }

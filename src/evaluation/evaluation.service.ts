@@ -10,11 +10,11 @@ import CSVParser from 'src/utilities/csv-parser'
 
 @Injectable()
 export class EvaluationService {
-  constructor(@InjectQueue('evaluation') private evaluationQueue: Queue) {}
+  //constructor(@InjectQueue('evaluation') private evaluationQueue: Queue) {}
 
   async requestEvaluation(urls: string[]): Promise<string> {
     const queueElement: IQueueElement = { uuid: uuidv4(), urls }
-    this.evaluationQueue.add(queueElement)
+    // this.evaluationQueue.add(queueElement)
 
     return queueElement.uuid
   }
