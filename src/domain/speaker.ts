@@ -9,7 +9,7 @@ export class Speaker {
   private _speechTotal = 0
   private _wordsTotal = 0
   private _internalSecurityCount = 0
-  private YearlySpeechesCount: { [id: number]: number }
+  private YearlySpeechesCount: { [id: number]: number } = {}
 
   public AddSpeech(speech: Speech): void {
     this.AddYearlySpeech(speech)

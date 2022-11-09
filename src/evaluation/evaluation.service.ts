@@ -7,28 +7,43 @@ import IQueueElement from 'src/interfaces/queue-element'
 import IEvaluationResult from 'src/interfaces/evaluation-result'
 import CSVLoader from 'src/utilities/csv-loader'
 import CSVParser from 'src/utilities/csv-parser'
+import ICSVSpeech from 'src/interfaces/csv-speech'
+import { Logger } from '@nestjs/common'
 
 @Injectable()
 export class EvaluationService {
-  //constructor(@InjectQueue('evaluation') private evaluationQueue: Queue) {}
+  constructor(@InjectQueue('evaluation') private evaluationQueue: Queue) {}
 
   async requestEvaluation(urls: string[]): Promise<string> {
+    Logger.log('requesting evaluation')
     const queueElement: IQueueElement = { uuid: uuidv4(), urls }
-    // this.evaluationQueue.add(queueElement)
+    this.evaluationQueue.add(queueElement)
 
     return queueElement.uuid
   }
 
   async evaluate(urls: string[]): Promise<IEvaluationResult> {
+    Logger.warn('evaluation in progress')
     const filePathes = await CSVLoader.load(urls)
 
     const evaluator = new SpeechEvaluator()
     for (const filePath of filePathes) {
-      await CSVParser.parse(filePath, evaluator.AddSpeakerData)
+      await CSVParser.parse<ICSVSpeech>(filePath, (data) =>
+        evaluator.AddSpeakerData(data),
+      )
     }
 
-    await CSVLoader.clear()
+    Logger.warn('evaluation awaiting')
+    await new Promise<void>((resolve) => {
+      setTimeout(() => resolve(), 10000)
+    })
 
-    return evaluator.GetResult()
+    // await CSVLoader.clear()
+
+    const result = evaluator.GetResult()
+    Logger.warn('evaluation complete')
+    Logger.warn(result)
+
+    return result
   }
 }

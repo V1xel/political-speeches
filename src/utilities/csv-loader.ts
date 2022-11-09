@@ -1,8 +1,9 @@
 import * as stream from 'stream'
-import Axios from 'axios'
+import { Axios } from 'axios'
 import { promisify } from 'util'
 import { createWriteStream, existsSync, rmdir, mkdirSync } from 'fs'
 import { v4 as uuidv4 } from 'uuid'
+import { Logger } from '@nestjs/common'
 
 const finished = promisify(stream.finished)
 
@@ -16,7 +17,9 @@ export default class CSVLoader {
     const files = []
     for (const url of urls) {
       const path = CSVLoader.DefaultOutputLocation + uuidv4()
+      Logger.warn('starting download')
       await this.downloadFile(url, path)
+      Logger.warn('starting finished')
       files.push(path)
     }
 
@@ -27,6 +30,7 @@ export default class CSVLoader {
     return new Promise<void>((resolve, reject) => {
       rmdir(CSVLoader.DefaultOutputLocation, { recursive: true }, (err) => {
         if (err) {
+          Logger.warn(err)
           reject(err)
         }
 
@@ -35,18 +39,19 @@ export default class CSVLoader {
     })
   }
 
-  static downloadFile(
+  static async downloadFile(
     fileUrl: string,
     outputLocationPath: string,
   ): Promise<void> {
     const writer = createWriteStream(outputLocationPath)
-    return Axios({
-      method: 'get',
-      url: fileUrl,
+    return new Axios({
       responseType: 'stream',
-    }).then((response) => {
-      response.data.pipe(writer)
-      return finished(writer)
     })
+      .get(fileUrl)
+      .then((response) => {
+        response.data.pipe(writer)
+        return finished(writer)
+      })
+      .catch((err) => Logger.warn(err))
   }
 }

@@ -1,5 +1,6 @@
 import * as fs from 'fs'
 import * as csv from 'csv-parser'
+import CSVHelper from './csv-helper'
 
 export default class CSVParser {
   static async parse<T>(
@@ -10,7 +11,10 @@ export default class CSVParser {
       fs.createReadStream(path)
         .pipe(csv())
         .on('error', (error) => reject(error))
-        .on('data', (data) => onDataCallback(data))
+        .on('data', (rawData) => {
+          const sanitizedData = CSVHelper.sanitizeProperties(rawData)
+          onDataCallback(sanitizedData)
+        })
         .on('end', () => resolve())
     })
   }
