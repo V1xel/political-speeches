@@ -70,11 +70,12 @@ export class SpeechEvaluator {
     const filtered = speakers.filter(
       (s: Speaker) => s.InternalSecurityCount > 0,
     )
+
     if (filtered.length === 0) {
       return null
     }
 
-    const sorted = speakers.sort(
+    const sorted = filtered.sort(
       (a, b) => b.InternalSecurityCount - a.InternalSecurityCount,
     )
     return sorted.at(0).Name
