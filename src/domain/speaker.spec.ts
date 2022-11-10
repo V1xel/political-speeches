@@ -20,7 +20,7 @@ describe('Speaker', () => {
       Name: 'Alexander Abel',
     }) as any as IPrivateSpeaker
 
-  const CreateInternalSecuritySpeechFactory = (
+  const CreateSpeechFactory = (
     topic: string = Speech.InternalSecurity,
     date: Date = new Date('2012-10-30'),
   ): Speech =>
@@ -45,7 +45,7 @@ describe('Speaker', () => {
   describe('Functions', () => {
     it('IncrementWordsTotal have to increment total words count with the given speech amount of words', () => {
       const speaker = CreateSpeakerFactory()
-      const speech = CreateInternalSecuritySpeechFactory()
+      const speech = CreateSpeechFactory()
 
       const beforeValue = speaker._wordsTotal
       speaker.IncrementWordsTotal(speech)
@@ -55,11 +55,9 @@ describe('Speaker', () => {
 
     it('IncrementInternalSecurityCount have to increment total internal security count with the given amount of related speeches', () => {
       const speaker = CreateSpeakerFactory()
-      const speech1 = CreateInternalSecuritySpeechFactory(
-        Speech.InternalSecurity,
-      )
-      const speech2 = CreateInternalSecuritySpeechFactory('Test Topic')
-      const speech3 = CreateInternalSecuritySpeechFactory('One More Test')
+      const speech1 = CreateSpeechFactory(Speech.InternalSecurity)
+      const speech2 = CreateSpeechFactory('Test Topic')
+      const speech3 = CreateSpeechFactory('One More Test')
 
       const beforeValue = speaker._internalSecurityCount
       speaker.IncrementInternalSecurityCount(speech1)
@@ -71,11 +69,11 @@ describe('Speaker', () => {
 
     it('AddYearlySpeech have to increment given year count', () => {
       const speaker = CreateSpeakerFactory()
-      const speech1 = CreateInternalSecuritySpeechFactory(
+      const speech1 = CreateSpeechFactory(
         Speech.InternalSecurity,
         new Date('2012-10-30'),
       )
-      const speech2 = CreateInternalSecuritySpeechFactory(
+      const speech2 = CreateSpeechFactory(
         Speech.InternalSecurity,
         new Date('2013-10-30'),
       )
@@ -88,11 +86,11 @@ describe('Speaker', () => {
 
     it('AddYearlySpeech have to increment given year count', () => {
       const speaker = CreateSpeakerFactory()
-      const speech1 = CreateInternalSecuritySpeechFactory(
+      const speech1 = CreateSpeechFactory(
         Speech.InternalSecurity,
         new Date('2012-10-30'),
       )
-      const speech2 = CreateInternalSecuritySpeechFactory(
+      const speech2 = CreateSpeechFactory(
         Speech.InternalSecurity,
         new Date('2013-10-30'),
       )
@@ -116,7 +114,7 @@ describe('Speaker', () => {
 
     it('AddSpeech have to provide value from the dicrionary', () => {
       const speaker = CreateSpeakerFactory()
-      const speech = CreateInternalSecuritySpeechFactory()
+      const speech = CreateSpeechFactory()
 
       const AddYearlySpeech = jest.spyOn(
         Speaker.prototype as any,
