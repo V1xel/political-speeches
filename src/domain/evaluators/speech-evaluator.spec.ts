@@ -9,6 +9,7 @@ interface IPrivateSpeechEvaluator {
   GetLeastWordySpeaker(): string
   GetMostSecuritySpeaker(): string
   GetMostYearlySpeechesSpeaker(): string
+  CheckDataIsValid(data: ICSVSpeech): boolean
   AddSpeakerData(data: ICSVSpeech)
   GetResult(): IEvaluationResult
 }
@@ -185,7 +186,7 @@ describe('SpeechEvaluator', () => {
         }
 
         const AddSpeech = jest.spyOn(Speaker.prototype as any, 'AddSpeech')
-        AddSpeech.mockImplementation(() => console.log('called'))
+        AddSpeech.mockImplementation(() => null)
 
         const speech: ICSVSpeech = {
           Speaker: 'Alexander Abel',
@@ -197,6 +198,104 @@ describe('SpeechEvaluator', () => {
         evaluator.AddSpeakerData(speech)
 
         expect(AddSpeech).toHaveBeenCalled()
+      })
+    })
+    describe('CheckDataValid', () => {
+      it('have to return false if at least one field of provided data is undefined', () => {
+        const evaluator = CreateSpeechEvaluatorFactory()
+        const speech1: ICSVSpeech = {
+          Speaker: undefined,
+          Topic: 'Internal Security',
+          Date: '2012-10-30',
+          Words: '100',
+        }
+
+        const speech2: ICSVSpeech = {
+          Speaker: 'Alexander Abel',
+          Topic: undefined,
+          Date: '2012-10-30',
+          Words: '100',
+        }
+
+        const speech3: ICSVSpeech = {
+          Speaker: 'Alexander Abel',
+          Topic: 'Internal Security',
+          Date: undefined,
+          Words: '100',
+        }
+
+        const speech4: ICSVSpeech = {
+          Speaker: 'Alexander Abel',
+          Topic: 'Internal Security',
+          Date: '2012-10-30',
+          Words: undefined,
+        }
+
+        const speech5: ICSVSpeech = {
+          Speaker: 'Alexander Abel',
+          Topic: 'Internal Security',
+          Date: 'aewrraehhareh',
+          Words: '100',
+        }
+
+        const speech6: ICSVSpeech = {
+          Speaker: 'Alexander Abel',
+          Topic: 'Internal Security',
+          Date: '2012-10-30',
+          Words: 'bwsebwe',
+        }
+
+        const result1 = evaluator.CheckDataIsValid(speech1)
+        const result2 = evaluator.CheckDataIsValid(speech2)
+        const result3 = evaluator.CheckDataIsValid(speech3)
+        const result4 = evaluator.CheckDataIsValid(speech4)
+        const result5 = evaluator.CheckDataIsValid(speech5)
+        const result6 = evaluator.CheckDataIsValid(speech6)
+        expect(
+          result1 && result2 && result3 && result4 && result5 && result6,
+        ).toBeFalsy()
+      })
+
+      it('have to return false if at least one field of provided data is undefined', () => {
+        const evaluator = CreateSpeechEvaluatorFactory()
+        const speech: ICSVSpeech = {
+          Speaker: 'Alexander Abel',
+          Topic: 'Internal Security',
+          Date: '2012-10-30',
+          Words: '100',
+        }
+
+        const result = evaluator.CheckDataIsValid(speech)
+        expect(result).toBeTruthy()
+      })
+
+      it('have to call all validation functions', () => {
+        const evaluator =
+          CreateSpeechEvaluatorFactory() as any as SpeechEvaluator
+
+        const CheckDateIsValid = jest.spyOn(
+          SpeechEvaluator.prototype as any,
+          'CheckDateIsValid',
+        )
+        CheckDateIsValid.mockImplementation(() => null)
+
+        const CheckWordsIsValid = jest.spyOn(
+          SpeechEvaluator.prototype as any,
+          'CheckWordsIsValid',
+        )
+        CheckWordsIsValid.mockImplementation(() => null)
+
+        const speech: ICSVSpeech = {
+          Speaker: 'Alexander Abel',
+          Topic: 'Internal Security',
+          Date: '2012-10-30',
+          Words: '100',
+        }
+
+        evaluator.CheckDataIsValid(speech)
+
+        expect(CheckDateIsValid).toHaveBeenCalled()
+        expect(CheckWordsIsValid).toHaveBeenCalled()
       })
     })
   })

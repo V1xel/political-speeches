@@ -17,6 +17,26 @@ export class SpeechEvaluator {
 
   private _speakersDictionary: { [id: string]: Speaker } = {}
 
+  private CheckDateIsValid(text: string): boolean {
+    const date = new Date(text)
+    const timestamp = Date.parse(text)
+    return date instanceof Date && !isNaN(timestamp)
+  }
+
+  private CheckWordsIsValid(text: string): boolean {
+    return typeof text === 'string' && !isNaN(parseInt(text))
+  }
+
+  public CheckDataIsValid(data: ICSVSpeech): boolean {
+    const hasUndefinedFields =
+      !data.Date || !data.Speaker || !data.Topic || !data.Words
+
+    const dateIsValid = this.CheckDateIsValid(data.Date)
+    const wordsIsValid = this.CheckWordsIsValid(data.Words)
+
+    return !hasUndefinedFields && dateIsValid && wordsIsValid
+  }
+
   public AddSpeakerData(data: ICSVSpeech): void {
     let speaker: Speaker = this._speakersDictionary[data.Speaker]
 
@@ -27,10 +47,10 @@ export class SpeechEvaluator {
 
     speaker.AddSpeech(
       new Speech({
-        Speaker: data.Speaker.trim(),
-        Topic: data.Topic.trim(),
-        Date: new Date(data.Date.trim()),
-        Words: parseInt(data.Words.trim()),
+        Speaker: data.Speaker,
+        Topic: data.Topic,
+        Date: new Date(data.Date),
+        Words: parseInt(data.Words),
       }),
     )
   }
