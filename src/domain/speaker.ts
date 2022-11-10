@@ -23,7 +23,7 @@ export class Speaker {
   }
 
   public GetYearlySpeechesCount(year: number): number {
-    return this._yearlySpeechesCount[year]
+    return this._yearlySpeechesCount[year] ?? 0
   }
 
   private AddYearlySpeech(speech: Speech): void {
