@@ -60,11 +60,14 @@ export class SpeechEvaluator {
   private GetMostYearlySpeechesSpeaker(): string {
     const year = this._args.YearForSpeechesCount
     const speakers = Object.values(this._speakersDictionary)
-    if (speakers.length === 0) {
+    const filtered = speakers.filter((s: Speaker) =>
+      s.GetYearlySpeechesCount(year),
+    )
+    if (filtered.length === 0) {
       return null
     }
 
-    const sorted = speakers.sort(
+    const sorted = filtered.sort(
       (a, b) => b.GetYearlySpeechesCount(year) - a.GetYearlySpeechesCount(year),
     )
     return sorted.at(0).Name
