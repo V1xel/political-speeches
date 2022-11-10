@@ -8,14 +8,12 @@ import IEvaluationResult from 'src/interfaces/evaluation-result'
 import CSVLoader from 'src/utilities/csv-loader'
 import CSVParser from 'src/utilities/csv-parser'
 import ICSVSpeech from 'src/interfaces/csv-speech'
-import { Logger } from '@nestjs/common'
 
 @Injectable()
 export class EvaluationService {
   constructor(@InjectQueue('evaluation') private evaluationQueue: Queue) {}
 
   async requestEvaluation(urls: string[]): Promise<string> {
-    Logger.log('requesting evaluation')
     const queueElement: IQueueElement = { uuid: uuidv4(), urls }
     this.evaluationQueue.add(queueElement)
 
@@ -23,7 +21,6 @@ export class EvaluationService {
   }
 
   async evaluate(urls: string[]): Promise<IEvaluationResult> {
-    Logger.warn('evaluation in progress')
     const filePathes = await CSVLoader.load(urls)
 
     const evaluator = new SpeechEvaluator()
@@ -33,17 +30,8 @@ export class EvaluationService {
       )
     }
 
-    Logger.warn('evaluation awaiting')
-    await new Promise<void>((resolve) => {
-      setTimeout(() => resolve(), 10000)
-    })
-
     // await CSVLoader.clear()
 
-    const result = evaluator.GetResult()
-    Logger.warn('evaluation complete')
-    Logger.warn(result)
-
-    return result
+    return evaluator.GetResult()
   }
 }

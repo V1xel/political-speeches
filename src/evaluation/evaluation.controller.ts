@@ -1,18 +1,25 @@
 import { Controller, Get, Query } from '@nestjs/common'
-import CSVLoader from 'src/utilities/csv-loader'
+import IEvaluationResult from 'src/interfaces/evaluation-result'
 import { EvaluationService } from './evaluation.service'
-import { Logger } from '@nestjs/common'
-import { Queue } from 'bull'
-import { InjectQueue } from '@nestjs/bull'
+import EvaluationQueryDTO from './validation/dto/evaluation-query'
 
 @Controller()
 export class EvaluationController {
   constructor(private readonly evaluationService: EvaluationService) {}
 
   @Get('evaluation')
-  async requestEvaluation(@Query('url') urls: string): Promise<string> {
+  async evaluation(
+    @Query('url') { url }: EvaluationQueryDTO,
+  ): Promise<IEvaluationResult> {
+    return this.evaluationService.evaluate(Array.isArray(url) ? url : [url])
+  }
+
+  @Get('evaluation-async')
+  async requestEvaluation(
+    @Query('url') { url }: EvaluationQueryDTO,
+  ): Promise<string> {
     return this.evaluationService.requestEvaluation(
-      Array.isArray(urls) ? urls : [urls],
+      Array.isArray(url) ? url : [url],
     )
   }
 }

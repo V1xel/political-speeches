@@ -27,6 +27,7 @@ export class EvaluationGateway implements OnGatewayConnection {
   handleMessage(uuid: string, client: WebSocket): void {
     const event = EvaluationGateway.GetEvaluationFinishedEventName(uuid)
     client.send(`subscribed on ${event}`)
+
     this.evaluationQueue.once(event, (args) => {
       client.send(JSON.stringify(args))
     })

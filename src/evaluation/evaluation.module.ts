@@ -10,20 +10,15 @@ import { EvaluationProcessor } from './evaluation.processor'
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env' }),
     BullModule.forRootAsync({
-      //imports: [ConfigModule],
+      imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         redis: {
-          host:
-            process.env.REDIS_HOST ?? configService.getOrThrow('REDIS_HOST'),
-          port:
-            process.env.REDIS_PORT ??
-            parseInt(configService.getOrThrow('REDIS_PORT')),
-          password:
-            process.env.REDIS_PASSWORD ??
-            configService.getOrThrow('REDIS_PASSWORD'),
+          host: configService.getOrThrow('REDIS_HOST'),
+          port: parseInt(configService.getOrThrow('REDIS_PORT')),
+          password: configService.getOrThrow('REDIS_PASSWORD'),
         },
       }),
-      //inject: [ConfigService],
     }),
     BullModule.registerQueue({
       name: 'evaluation',

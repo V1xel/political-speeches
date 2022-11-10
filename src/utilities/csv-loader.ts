@@ -27,6 +27,17 @@ export default class CSVLoader {
   }
 
   static async clear(): Promise<void> {
+    // Replace current with following
+    // fs.readdir(directory, (err, files) => {
+    //   if (err) throw err;
+
+    //   for (const file of files) {
+    //     fs.unlink(path.join(directory, file), (err) => {
+    //       if (err) throw err;
+    //     });
+    //   }
+    // });
+
     return new Promise<void>((resolve, reject) => {
       rmdir(CSVLoader.DefaultOutputLocation, { recursive: true }, (err) => {
         if (err) {
