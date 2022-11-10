@@ -3,29 +3,142 @@ import { Speaker } from './speaker'
 import { Speech } from './speech'
 
 interface IPrivateSpeaker {
+  _wordsTotal: number
+  _internalSecurityCount: number
+  _yearlySpeechesCount: { [id: number]: number }
+  Name: string
   AddSpeech(speech: Speech)
   AddYearlySpeech(speech: Speech)
   IncrementInternalSecurityCount(speech: Speech)
   IncrementWordsTotal(speech: Speech)
-  IncrementSpeechTotal()
+  GetYearlySpeechesCount(year: number)
 }
 
 describe('Speaker', () => {
-  const internalSecuritySpeech = new Speech({
-    Speaker: 'Test',
-    Date: new Date('2012-10-30'),
-    Topic: Speech.InternalSecurity,
-    Words: 12,
+  const CreateSpeakerFactory = (): IPrivateSpeaker =>
+    new Speaker({
+      Name: 'Alexander Abel',
+    }) as any as IPrivateSpeaker
+
+  const CreateInternalSecuritySpeechFactory = (
+    topic: string = Speech.InternalSecurity,
+    date: Date = new Date('2012-10-30'),
+  ): Speech =>
+    new Speech({
+      Speaker: 'Test',
+      Date: date,
+      Topic: topic,
+      Words: 12,
+    })
+
+  describe('Construction', () => {
+    it('Speaker fields have to be initialized', () => {
+      const speaker = CreateSpeakerFactory()
+
+      expect(speaker._internalSecurityCount).toEqual(0)
+      expect(speaker._wordsTotal).toEqual(0)
+      expect(speaker._yearlySpeechesCount).toEqual({})
+      expect(Object.keys(speaker._yearlySpeechesCount).length).toEqual(0)
+    })
   })
 
   describe('Functions', () => {
-    it('HasInternalSecurityTopic have to return true when speech has Internal Security topic.', () => {
-      const speaker = new Speaker({
-        Name: 'Alexander Abel',
-      }) as any as IPrivateSpeaker
-      speaker.AddYearlySpeech(internalSecuritySpeech)
+    it('IncrementWordsTotal have to increment total words count with the given speech amount of words', () => {
+      const speaker = CreateSpeakerFactory()
+      const speech = CreateInternalSecuritySpeechFactory()
 
-      expect(true).toBe(true)
+      const beforeValue = speaker._wordsTotal
+      speaker.IncrementWordsTotal(speech)
+
+      expect(speaker._wordsTotal).toEqual(beforeValue + speech.Words)
+    })
+
+    it('IncrementInternalSecurityCount have to increment total internal security count with the given amount of related speeches', () => {
+      const speaker = CreateSpeakerFactory()
+      const speech1 = CreateInternalSecuritySpeechFactory(
+        Speech.InternalSecurity,
+      )
+      const speech2 = CreateInternalSecuritySpeechFactory('Test Topic')
+      const speech3 = CreateInternalSecuritySpeechFactory('One More Test')
+
+      const beforeValue = speaker._internalSecurityCount
+      speaker.IncrementInternalSecurityCount(speech1)
+      speaker.IncrementInternalSecurityCount(speech2)
+      speaker.IncrementInternalSecurityCount(speech3)
+
+      expect(speaker._internalSecurityCount).toEqual(beforeValue + 1)
+    })
+
+    it('AddYearlySpeech have to increment given year count', () => {
+      const speaker = CreateSpeakerFactory()
+      const speech1 = CreateInternalSecuritySpeechFactory(
+        Speech.InternalSecurity,
+        new Date('2012-10-30'),
+      )
+      const speech2 = CreateInternalSecuritySpeechFactory(
+        Speech.InternalSecurity,
+        new Date('2013-10-30'),
+      )
+
+      speaker.AddYearlySpeech(speech1)
+      speaker.AddYearlySpeech(speech2)
+
+      expect(speaker._yearlySpeechesCount[2012]).toEqual(1)
+    })
+
+    it('AddYearlySpeech have to increment given year count', () => {
+      const speaker = CreateSpeakerFactory()
+      const speech1 = CreateInternalSecuritySpeechFactory(
+        Speech.InternalSecurity,
+        new Date('2012-10-30'),
+      )
+      const speech2 = CreateInternalSecuritySpeechFactory(
+        Speech.InternalSecurity,
+        new Date('2013-10-30'),
+      )
+
+      speaker.AddYearlySpeech(speech1)
+      speaker.AddYearlySpeech(speech2)
+
+      expect(speaker._yearlySpeechesCount[2012]).toEqual(1)
+    })
+
+    it('GetYearlySpeechesCount have to provide value from the dicrionary', () => {
+      const speaker = CreateSpeakerFactory()
+      speaker._yearlySpeechesCount = {
+        2012: 25,
+      }
+
+      expect(speaker.GetYearlySpeechesCount(2012)).toEqual(
+        speaker._yearlySpeechesCount[2012],
+      )
+    })
+
+    it('AddSpeech have to provide value from the dicrionary', () => {
+      const speaker = CreateSpeakerFactory()
+      const speech = CreateInternalSecuritySpeechFactory()
+
+      const AddYearlySpeech = jest.spyOn(
+        Speaker.prototype as any,
+        'AddYearlySpeech',
+      )
+      const IncrementInternalSecurityCount = jest.spyOn(
+        Speaker.prototype as any,
+        'IncrementInternalSecurityCount',
+      )
+      const IncrementWordsTotal = jest.spyOn(
+        Speaker.prototype as any,
+        'IncrementWordsTotal',
+      )
+      AddYearlySpeech.mockImplementation(() => null)
+      IncrementInternalSecurityCount.mockImplementation(() => null)
+      IncrementWordsTotal.mockImplementation(() => null)
+
+      speaker.AddSpeech(speech)
+
+      expect(AddYearlySpeech).toHaveBeenCalled()
+      expect(IncrementInternalSecurityCount).toHaveBeenCalled()
+      expect(IncrementWordsTotal).toHaveBeenCalled()
     })
   })
 })
