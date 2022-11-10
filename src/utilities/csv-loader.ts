@@ -1,9 +1,10 @@
 import * as stream from 'stream'
 import { Axios } from 'axios'
 import { promisify } from 'util'
-import { createWriteStream, existsSync, rmdir, mkdirSync } from 'fs'
+import { createWriteStream, existsSync, readdir, unlink, mkdirSync } from 'fs'
 import { v4 as uuidv4 } from 'uuid'
 import { Logger } from '@nestjs/common'
+import { join } from 'path'
 
 const finished = promisify(stream.finished)
 
@@ -17,32 +18,23 @@ export default class CSVLoader {
     const files = []
     for (const url of urls) {
       const path = CSVLoader.DefaultOutputLocation + uuidv4()
-      Logger.warn('starting download')
-      await this.downloadFile(url, path)
-      Logger.warn('starting finished')
-      files.push(path)
+      if (await this.tryDownloadFile(url, path)) {
+        files.push(path)
+      }
     }
 
     return files
   }
 
   static async clear(): Promise<void> {
-    // Replace current with following
-    // fs.readdir(directory, (err, files) => {
-    //   if (err) throw err;
-
-    //   for (const file of files) {
-    //     fs.unlink(path.join(directory, file), (err) => {
-    //       if (err) throw err;
-    //     });
-    //   }
-    // });
-
     return new Promise<void>((resolve, reject) => {
-      rmdir(CSVLoader.DefaultOutputLocation, { recursive: true }, (err) => {
-        if (err) {
-          Logger.warn(err)
-          reject(err)
+      readdir(CSVLoader.DefaultOutputLocation, (err, files) => {
+        if (err) reject(err)
+
+        for (const file of files) {
+          unlink(join(CSVLoader.DefaultOutputLocation, file), (err) => {
+            if (err) reject(err)
+          })
         }
 
         resolve()
@@ -50,12 +42,13 @@ export default class CSVLoader {
     })
   }
 
-  static async downloadFile(
+  static async tryDownloadFile(
     fileUrl: string,
     outputLocationPath: string,
-  ): Promise<void> {
+  ): Promise<boolean> {
     const writer = createWriteStream(outputLocationPath)
-    return new Axios({
+    let success = true
+    await new Axios({
       responseType: 'stream',
     })
       .get(fileUrl)
@@ -63,6 +56,11 @@ export default class CSVLoader {
         response.data.pipe(writer)
         return finished(writer)
       })
-      .catch((err) => Logger.warn(err))
+      .catch((err) => {
+        Logger.warn(err)
+        success = false
+      })
+
+    return success
   }
 }

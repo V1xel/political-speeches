@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common'
+import { Controller, Get, Logger, Query, ValidationPipe } from '@nestjs/common'
 import IEvaluationResult from 'src/interfaces/evaluation-result'
 import { EvaluationService } from './evaluation.service'
 import EvaluationQueryDTO from './validation/dto/evaluation-query'
@@ -9,14 +9,14 @@ export class EvaluationController {
 
   @Get('evaluation')
   async evaluation(
-    @Query('url') { url }: EvaluationQueryDTO,
+    @Query() { url }: EvaluationQueryDTO,
   ): Promise<IEvaluationResult> {
     return this.evaluationService.evaluate(Array.isArray(url) ? url : [url])
   }
 
   @Get('evaluation-async')
   async requestEvaluation(
-    @Query('url') { url }: EvaluationQueryDTO,
+    @Query() { url }: EvaluationQueryDTO,
   ): Promise<string> {
     return this.evaluationService.requestEvaluation(
       Array.isArray(url) ? url : [url],

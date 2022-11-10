@@ -1,5 +1,4 @@
 import { InjectQueue } from '@nestjs/bull'
-import { Logger } from '@nestjs/common'
 import {
   WebSocketGateway,
   OnGatewayConnection,
@@ -16,6 +15,9 @@ import { WebSocket } from 'ws'
 export class EvaluationGateway implements OnGatewayConnection {
   public static GetEvaluationFinishedEventName = (uuid: string): string =>
     `evaluation-finished-${uuid}`
+  public static GetAwaitingSubscriptionEventName = (uuid: string): string =>
+    `evaluation-awaiting-${uuid}`
+
   constructor(@InjectQueue('evaluation') private evaluationQueue: Queue) {}
 
   async handleConnection(@ConnectedSocket() client: WebSocket): Promise<void> {
@@ -25,11 +27,17 @@ export class EvaluationGateway implements OnGatewayConnection {
   }
 
   handleMessage(uuid: string, client: WebSocket): void {
-    const event = EvaluationGateway.GetEvaluationFinishedEventName(uuid)
-    client.send(`subscribed on ${event}`)
+    const finishedEvent = EvaluationGateway.GetEvaluationFinishedEventName(uuid)
+    const finishedBeforeSubscription =
+      EvaluationGateway.GetAwaitingSubscriptionEventName(uuid)
 
-    this.evaluationQueue.once(event, (args) => {
+    this.evaluationQueue.once(finishedEvent, (args) => {
       client.send(JSON.stringify(args))
     })
+    client.send(`subscribed on ${finishedEvent}`)
+
+    if (this.evaluationQueue.listenerCount(finishedBeforeSubscription) > 0) {
+      this.evaluationQueue.emit(finishedBeforeSubscription)
+    }
   }
 }

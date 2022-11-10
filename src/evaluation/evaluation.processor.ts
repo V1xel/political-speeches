@@ -16,9 +16,20 @@ export class EvaluationProcessor {
     const { uuid, urls } = job.data
     const result = await this.evaluationService.evaluate(urls)
 
-    this.evaluationQueue.emit(
+    const haveListeners = this.evaluationQueue.emit(
       EvaluationGateway.GetEvaluationFinishedEventName(uuid),
       result,
     )
+
+    if (!haveListeners) {
+      const finishedBeforeSubscription =
+        EvaluationGateway.GetAwaitingSubscriptionEventName(uuid)
+      this.evaluationQueue.once(finishedBeforeSubscription, () =>
+        this.evaluationQueue.emit(
+          EvaluationGateway.GetEvaluationFinishedEventName(uuid),
+          result,
+        ),
+      )
+    }
   }
 }

@@ -30,7 +30,7 @@ export class EvaluationService {
       )
     }
 
-    // await CSVLoader.clear()
+    await CSVLoader.clear()
 
     return evaluator.GetResult()
   }

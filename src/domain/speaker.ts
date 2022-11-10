@@ -11,11 +11,20 @@ export class Speaker {
   private _internalSecurityCount = 0
   private YearlySpeechesCount: { [id: number]: number } = {}
 
-  public AddSpeech(speech: Speech): void {
-    this.AddYearlySpeech(speech)
-    this.IncrementInternalSecurityCount(speech)
-    this.IncrementWordsTotal(speech)
-    this.IncrementSpeechTotal()
+  public get Name(): string {
+    return this._args.Name
+  }
+
+  public get WordsTotal(): number {
+    return this._wordsTotal
+  }
+
+  public get SpeechTotal(): number {
+    return this._speechTotal
+  }
+
+  public get InternalSecurityCount(): number {
+    return this._internalSecurityCount
   }
 
   private AddYearlySpeech(speech: Speech): void {
@@ -42,19 +51,10 @@ export class Speaker {
     this._speechTotal++
   }
 
-  public get Name(): string {
-    return this._args.Name
-  }
-
-  public get WordsTotal(): number {
-    return this._wordsTotal
-  }
-
-  public get SpeechTotal(): number {
-    return this._speechTotal
-  }
-
-  public get InternalSecurityCount(): number {
-    return this._internalSecurityCount
+  public AddSpeech(speech: Speech): void {
+    this.AddYearlySpeech(speech)
+    this.IncrementInternalSecurityCount(speech)
+    this.IncrementWordsTotal(speech)
+    this.IncrementSpeechTotal()
   }
 }

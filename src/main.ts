@@ -8,6 +8,7 @@ async function bootstrap(): Promise<void> {
   app.useWebSocketAdapter(new WsAdapter(app))
   app.useGlobalPipes(
     new ValidationPipe({
+      whitelist: true,
       transform: true,
       transformOptions: { enableImplicitConversion: true },
     }),

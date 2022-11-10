@@ -1,4 +1,3 @@
-import CSVHelper from 'src/utilities/csv-helper'
 import ICSVSpeech from '../../interfaces/csv-speech'
 import { Speaker } from '../speaker'
 import { Speech } from '../speech'
@@ -32,22 +31,31 @@ export class SpeechEvaluator {
 
   private GetLeastWordySpeaker(): string {
     const speakers = Object.values(this.speakersDictionary)
-    speakers.sort((a, b) => a.WordsTotal - b.WordsTotal)
+    if (speakers.length === 0) {
+      return null
+    }
 
+    speakers.sort((a, b) => a.WordsTotal - b.WordsTotal)
     return speakers.at(0).Name
   }
 
   private GetMostSecuritySpeaker(): string {
     const speakers = Object.values(this.speakersDictionary)
-    speakers.sort((a, b) => b.InternalSecurityCount - a.InternalSecurityCount)
+    if (speakers.length === 0) {
+      return null
+    }
 
+    speakers.sort((a, b) => b.InternalSecurityCount - a.InternalSecurityCount)
     return speakers.at(0).Name
   }
 
   private GetMostSpeechesSpeaker(): string {
     const speakers = Object.values(this.speakersDictionary)
-    speakers.sort((a, b) => b.SpeechTotal - a.SpeechTotal)
+    if (speakers.length === 0) {
+      return null
+    }
 
+    speakers.sort((a, b) => b.SpeechTotal - a.SpeechTotal)
     return speakers.at(0).Name
   }
 
