@@ -7,6 +7,8 @@
 
 ## Running the app
 
+- Pull the project
+- From the root directory execute the following:
 ```bash
 $ docker-compose up -d
 ```
