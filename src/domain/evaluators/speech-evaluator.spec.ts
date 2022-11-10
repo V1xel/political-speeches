@@ -64,12 +64,28 @@ describe('SpeechEvaluator', () => {
         const speaker2 = CreateSpeakerFactory('Volodymyr Abel')
         speaker2._internalSecurityCount = 25
 
+        const speaker3 = CreateSpeakerFactory('Bernhard Belling')
+        speaker3._internalSecurityCount = 0
+
         evaluator._speakersDictionary = {
           'Alexander Abel': speaker as any as Speaker,
           'Volodymyr Abel': speaker2 as any as Speaker,
+          'Bernhard Belling': speaker3 as any as Speaker,
         }
 
         expect(evaluator.GetMostSecuritySpeaker()).toBe('Alexander Abel')
+      })
+
+      it('have to return null when only speaker has 0 security count', () => {
+        const evaluator = CreateSpeechEvaluatorFactory()
+        const speaker = CreateSpeakerFactory('Bernhard Belling')
+        speaker._internalSecurityCount = 0
+
+        evaluator._speakersDictionary = {
+          'Bernhard Belling': speaker as any as Speaker,
+        }
+
+        expect(evaluator.GetMostSecuritySpeaker()).toBe(null)
       })
 
       it('have to return null with empty list of speakers.', () => {

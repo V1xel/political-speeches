@@ -67,7 +67,10 @@ export class SpeechEvaluator {
 
   private GetMostSecuritySpeaker(): string {
     const speakers = Object.values(this._speakersDictionary)
-    if (speakers.length === 0) {
+    const filtered = speakers.filter(
+      (s: Speaker) => s.InternalSecurityCount > 0,
+    )
+    if (filtered.length === 0) {
       return null
     }
 
