@@ -17,26 +17,6 @@ export class SpeechEvaluator {
 
   private _speakersDictionary: { [id: string]: Speaker } = {}
 
-  private CheckDateIsValid(text: string): boolean {
-    const date = new Date(text)
-    const timestamp = Date.parse(text)
-    return date instanceof Date && !isNaN(timestamp)
-  }
-
-  private CheckWordsIsValid(text: string): boolean {
-    return typeof text === 'string' && !isNaN(parseInt(text))
-  }
-
-  public CheckDataIsValid(data: ICSVSpeech): boolean {
-    const hasUndefinedFields =
-      !data.Date || !data.Speaker || !data.Topic || !data.Words
-
-    const dateIsValid = this.CheckDateIsValid(data.Date)
-    const wordsIsValid = this.CheckWordsIsValid(data.Words)
-
-    return !hasUndefinedFields && dateIsValid && wordsIsValid
-  }
-
   public AddSpeakerData(data: ICSVSpeech): void {
     let speaker: Speaker = this._speakersDictionary[data.Speaker]
 
@@ -45,7 +25,7 @@ export class SpeechEvaluator {
       this._speakersDictionary[data.Speaker] = speaker
     }
 
-    speaker.AddSpeech(
+    speaker.TryAddSpeech(
       new Speech({
         Speaker: data.Speaker,
         Topic: data.Topic,
@@ -70,7 +50,6 @@ export class SpeechEvaluator {
     const filtered = speakers.filter(
       (s: Speaker) => s.InternalSecurityCount > 0,
     )
-
     if (filtered.length === 0) {
       return null
     }
@@ -94,6 +73,7 @@ export class SpeechEvaluator {
     const sorted = filtered.sort(
       (a, b) => b.GetYearlySpeechesCount(year) - a.GetYearlySpeechesCount(year),
     )
+
     return sorted.at(0).Name
   }
 

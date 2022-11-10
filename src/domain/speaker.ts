@@ -46,7 +46,9 @@ export class Speaker {
     this._wordsTotal += speech.Words
   }
 
-  public AddSpeech(speech: Speech): void {
+  public TryAddSpeech(speech: Speech): void {
+    if (!speech.IsValid) return
+
     this.AddYearlySpeech(speech)
     this.IncrementInternalSecurityCount(speech)
     this.IncrementWordsTotal(speech)

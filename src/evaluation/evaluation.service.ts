@@ -25,11 +25,9 @@ export class EvaluationService {
 
     const evaluator = new SpeechEvaluator({ YearForSpeechesCount: year })
     for (const filePath of filePathes) {
-      await CSVParser.parse<ICSVSpeech>(filePath, (data) => {
-        if (evaluator.CheckDataIsValid(data)) {
-          evaluator.AddSpeakerData(data)
-        }
-      })
+      await CSVParser.parse<ICSVSpeech>(filePath, (data) =>
+        evaluator.AddSpeakerData(data),
+      )
     }
 
     await CSVLoader.clear()
