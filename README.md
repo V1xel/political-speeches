@@ -69,3 +69,6 @@ client.send('bb9f0366-769d-45c0-97f7-3f8f372bbbdf')
 //You will get the message that you have subscribed.
 //After the CSV are processed you will get the result.
 ```
+
+https://i.gyazo.com/e67babe07ada149e5fc61912b6f83472.mp4
+https://i.gyazo.com/56367e94f07bb899636cda330f153dfe.mp4
