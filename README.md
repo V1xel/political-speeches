@@ -45,13 +45,13 @@ $ npm run test:cov
 Application is running on 3000 port
 
 ### Synchronous way:
-- create GET request to http://localhost:3000/evaluation
+- make GET request to http://localhost:3000/evaluation
 - include one or multiple 'url' as query parameters to specify the csv files to download.
 - there are optional query parameter 'year' that specifies selected year for 'mostSpeeches' result. Default for this is 2013.
 - response for this request will be the result.
 
 ### Asynchronous way:
-- create GET request to http://localhost:3000/evaluation-async
+- make GET request to http://localhost:3000/evaluation-async
 - include one or multiple 'url' as query parameters to specify the csv files to download.
 - there is optional query parameter 'year' that specifies selected year for 'mostSpeeches' result. Default for this is 2013.
 - response for this request will be a uuid for subscription.
