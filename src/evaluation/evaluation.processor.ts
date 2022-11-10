@@ -13,8 +13,8 @@ export class EvaluationProcessor {
 
   @Process()
   async handle(job: Job<IQueueElement>): Promise<void> {
-    const { uuid, urls } = job.data
-    const result = await this.evaluationService.evaluate(urls)
+    const { uuid, urls, year } = job.data
+    const result = await this.evaluationService.evaluate(urls, year)
 
     const haveListeners = this.evaluationQueue.emit(
       EvaluationGateway.GetEvaluationFinishedEventName(uuid),

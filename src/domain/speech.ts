@@ -22,7 +22,7 @@ export class Speech {
   }
 
   public HasInternalSecurityTopic(): boolean {
-    return this.Topic === Speech.InternalSecurity
+    return this.Topic.toLowerCase() === Speech.InternalSecurity.toLowerCase()
   }
 
   public GetYear(): number {

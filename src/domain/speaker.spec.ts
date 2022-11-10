@@ -1,16 +1,31 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Speaker } from './speaker'
 import { Speech } from './speech'
 
-describe('Speach', () => {
-  const speech = new Speech({
+interface IPrivateSpeaker {
+  AddSpeech(speech: Speech)
+  AddYearlySpeech(speech: Speech)
+  IncrementInternalSecurityCount(speech: Speech)
+  IncrementWordsTotal(speech: Speech)
+  IncrementSpeechTotal()
+}
+
+describe('Speaker', () => {
+  const internalSecuritySpeech = new Speech({
     Speaker: 'Test',
-    Date: new Date(),
+    Date: new Date('2012-10-30'),
     Topic: Speech.InternalSecurity,
     Words: 12,
   })
 
-  describe('root', () => {
+  describe('Functions', () => {
     it('HasInternalSecurityTopic have to return true when speech has Internal Security topic.', () => {
-      expect(speech.HasInternalSecurityTopic()).toBe(true)
+      const speaker = new Speaker({
+        Name: 'Alexander Abel',
+      }) as any as IPrivateSpeaker
+      speaker.AddYearlySpeech(internalSecuritySpeech)
+
+      expect(true).toBe(true)
     })
   })
 })

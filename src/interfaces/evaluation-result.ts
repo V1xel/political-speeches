@@ -1,5 +1,5 @@
 export default interface IEvaluationResult {
-  mostSpeeches: string | null
+  mostYearlySpeeches: string | null
   mostSecurity: string | null
   leastWordy: string | null
 }

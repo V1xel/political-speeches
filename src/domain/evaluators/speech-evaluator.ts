@@ -3,12 +3,18 @@ import { Speaker } from '../speaker'
 import { Speech } from '../speech'
 
 interface IEvaluationResult {
-  mostSpeeches: string | null
+  mostYearlySpeeches: string | null
   mostSecurity: string | null
   leastWordy: string | null
 }
 
+export interface ISpeechEvaluatorArgs {
+  YearForSpeechesCount: number
+}
+
 export class SpeechEvaluator {
+  constructor(private _args: ISpeechEvaluatorArgs) {}
+
   private speakersDictionary: { [id: string]: Speaker } = {}
 
   public AddSpeakerData(data: ICSVSpeech): void {
@@ -49,13 +55,16 @@ export class SpeechEvaluator {
     return speakers.at(0).Name
   }
 
-  private GetMostSpeechesSpeaker(): string {
+  private GetMostYearlySpeechesSpeaker(): string {
+    const year = this._args.YearForSpeechesCount
     const speakers = Object.values(this.speakersDictionary)
     if (speakers.length === 0) {
       return null
     }
 
-    speakers.sort((a, b) => b.SpeechTotal - a.SpeechTotal)
+    speakers.sort(
+      (a, b) => b.GetYearlySpeechesCount(year) - a.GetYearlySpeechesCount(year),
+    )
     return speakers.at(0).Name
   }
 
@@ -63,7 +72,7 @@ export class SpeechEvaluator {
     return {
       leastWordy: this.GetLeastWordySpeaker(),
       mostSecurity: this.GetMostSecuritySpeaker(),
-      mostSpeeches: this.GetMostSpeechesSpeaker(),
+      mostYearlySpeeches: this.GetMostYearlySpeechesSpeaker(),
     }
   }
 }

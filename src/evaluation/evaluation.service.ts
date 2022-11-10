@@ -13,17 +13,17 @@ import ICSVSpeech from 'src/interfaces/csv-speech'
 export class EvaluationService {
   constructor(@InjectQueue('evaluation') private evaluationQueue: Queue) {}
 
-  async requestEvaluation(urls: string[]): Promise<string> {
-    const queueElement: IQueueElement = { uuid: uuidv4(), urls }
+  async requestEvaluation(urls: string[], year: number): Promise<string> {
+    const queueElement: IQueueElement = { uuid: uuidv4(), urls, year }
     this.evaluationQueue.add(queueElement)
 
     return queueElement.uuid
   }
 
-  async evaluate(urls: string[]): Promise<IEvaluationResult> {
+  async evaluate(urls: string[], year: number): Promise<IEvaluationResult> {
     const filePathes = await CSVLoader.load(urls)
 
-    const evaluator = new SpeechEvaluator()
+    const evaluator = new SpeechEvaluator({ YearForSpeechesCount: year })
     for (const filePath of filePathes) {
       await CSVParser.parse<ICSVSpeech>(filePath, (data) =>
         evaluator.AddSpeakerData(data),

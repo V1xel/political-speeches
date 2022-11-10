@@ -9,17 +9,21 @@ export class EvaluationController {
 
   @Get('evaluation')
   async evaluation(
-    @Query() { url }: EvaluationQueryDTO,
+    @Query() { url, year }: EvaluationQueryDTO,
   ): Promise<IEvaluationResult> {
-    return this.evaluationService.evaluate(Array.isArray(url) ? url : [url])
+    return this.evaluationService.evaluate(
+      Array.isArray(url) ? url : [url],
+      year,
+    )
   }
 
   @Get('evaluation-async')
   async requestEvaluation(
-    @Query() { url }: EvaluationQueryDTO,
+    @Query() { url, year }: EvaluationQueryDTO,
   ): Promise<string> {
     return this.evaluationService.requestEvaluation(
       Array.isArray(url) ? url : [url],
+      year,
     )
   }
 }
