@@ -12,6 +12,23 @@
 ```bash
 $ docker-compose up -d
 ```
+After everything end loading you will see the following lines
+
+```bash
+[Nest] 72  - 11/10/2022, 6:47:01 PM     LOG [NestFactory] Starting Nest application...
+[Nest] 72  - 11/10/2022, 6:47:01 PM     LOG [InstanceLoader] DiscoveryModule dependencies initialized +16ms
+[Nest] 72  - 11/10/2022, 6:47:01 PM     LOG [InstanceLoader] ConfigHostModule dependencies initialized +0ms
+[Nest] 72  - 11/10/2022, 6:47:01 PM     LOG [InstanceLoader] BullModule dependencies initialized +1ms
+[Nest] 72  - 11/10/2022, 6:47:01 PM     LOG [InstanceLoader] ConfigModule dependencies initialized +0ms
+[Nest] 72  - 11/10/2022, 6:47:01 PM     LOG [InstanceLoader] ConfigModule dependencies initialized +0ms
+[Nest] 72  - 11/10/2022, 6:47:01 PM     LOG [InstanceLoader] BullModule dependencies initialized +0ms
+[Nest] 72  - 11/10/2022, 6:47:01 PM     LOG [InstanceLoader] BullModule dependencies initialized +4ms
+[Nest] 72  - 11/10/2022, 6:47:01 PM     LOG [InstanceLoader] EvaluationModule dependencies initialized +0ms
+[Nest] 72  - 11/10/2022, 6:47:01 PM     LOG [RoutesResolver] EvaluationController {/}: +6ms
+[Nest] 72  - 11/10/2022, 6:47:01 PM     LOG [RouterExplorer] Mapped {/evaluation, GET} route +2ms
+[Nest] 72  - 11/10/2022, 6:47:01 PM     LOG [RouterExplorer] Mapped {/evaluation-async, GET} route +0ms
+[Nest] 72  - 11/10/2022, 6:47:01 PM     LOG [NestApplication] Nest application successfully started +3ms
+```
 
 ## Test
 
