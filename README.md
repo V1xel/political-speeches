@@ -53,7 +53,7 @@ Application is running on 3000 port
 ### Asynchronous way:
 - create GET request to http://localhost:3000/evaluation-async
 - include one or multiple 'url' as query parameters to specify the csv files to download.
-- there are optional query parameter 'year' that specifies selected year for 'mostSpeeches' result. Default for this is 2013.
+- there is optional query parameter 'year' that specifies selected year for 'mostSpeeches' result. Default for this is 2013.
 - response for this request will be a uuid for subscription.
 - create websocket connection to ws://localhost:3000
 - send the uuid that you got from the previous step.
