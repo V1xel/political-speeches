@@ -1,3 +1,4 @@
+import DomainError from 'src/errors/domain-error'
 import { Speech } from './speech'
 
 export interface ISpeakerArgs {
@@ -5,7 +6,10 @@ export interface ISpeakerArgs {
 }
 
 export class Speaker {
-  constructor(private _args: ISpeakerArgs) {}
+  constructor(private _args: ISpeakerArgs) {
+    this.IsValidOrThrow()
+  }
+
   private _wordsTotal = 0
   private _internalSecurityCount = 0
   private _yearlySpeechesCount: { [id: number]: number } = {}
@@ -46,9 +50,18 @@ export class Speaker {
     this._wordsTotal += speech.Words
   }
 
-  public TryAddSpeech(speech: Speech): void {
-    if (!speech.IsValid()) return
+  private IsValidOrThrow(): void {
+    const hasUndefinedFields = !this._args.Name
 
+    if (hasUndefinedFields) {
+      throw new DomainError(
+        'Speaker name is undefined, this speaker will be skipped.',
+        this._args,
+      )
+    }
+  }
+
+  public TryAddSpeech(speech: Speech): void {
     this.AddYearlySpeech(speech)
     this.IncrementInternalSecurityCount(speech)
     this.IncrementWordsTotal(speech)

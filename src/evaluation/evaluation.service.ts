@@ -23,7 +23,7 @@ export class EvaluationService {
     const evaluator = new SpeechEvaluator({ YearForSpeechesCount: year })
     for (const url of urls) {
       await CSVParser.parse<ICSVSpeech>(url, (data) =>
-        evaluator.AddSpeakerData(data),
+        evaluator.TryAddSpeakerData(data),
       )
     }
 

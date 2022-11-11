@@ -1,3 +1,5 @@
+import DomainError from 'src/errors/domain-error'
+
 export interface ISpeechArgs {
   Speaker: string
   Topic: string
@@ -7,7 +9,10 @@ export interface ISpeechArgs {
 
 export class Speech {
   public static readonly InternalSecurity = 'Internal Security'
-  constructor(private _args: ISpeechArgs) {}
+  private static readonly MinialAlowedWordsCount = 0
+  constructor(private _args: ISpeechArgs) {
+    this.IsValidOrThrow()
+  }
 
   public get Speaker(): string {
     return this._args.Speaker
@@ -30,21 +35,40 @@ export class Speech {
     return Date.getFullYear()
   }
 
-  private CheckDateIsValid(): boolean {
+  private IsValidOrThrow(): void {
+    const hasUndefinedFields = !this._args.Speaker || !this._args.Topic
+    if (hasUndefinedFields) {
+      throw new DomainError(
+        'At least one Speech argument is undefined.',
+        this._args,
+      )
+    }
+
+    this.CheckDateIsValidOrThrow()
+    this.CheckWordsIsValidOrThrow()
+  }
+
+  private CheckDateIsValidOrThrow(): boolean {
     const date = this._args.Date
     return date instanceof Date && !isNaN(date.getTime())
   }
 
-  private CheckWordsIsValid(): boolean {
+  private CheckWordsIsValidOrThrow(): void {
     const words = this._args.Words
-    return !isNaN(words)
-  }
+    if (words < Speech.MinialAlowedWordsCount) {
+      throw new DomainError(
+        'Speech argument Words contains less then allowed amount, this speech will be skipped.',
+        this._args,
+      )
+    }
 
-  public IsValid(): boolean {
-    const hasUndefinedFields = !this._args.Speaker || !this._args.Topic
-    const dateIsValid = this.CheckDateIsValid()
-    const wordsIsValid = this.CheckWordsIsValid()
+    if (isNaN(words)) {
+      throw new DomainError(
+        'Speech argument Words cant be not a number, this speech will be skipped.',
+        this._args,
+      )
+    }
 
-    return !hasUndefinedFields && dateIsValid && wordsIsValid
+    return
   }
 }

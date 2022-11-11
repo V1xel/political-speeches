@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common'
 import ICSVSpeech from '../../interfaces/csv-speech'
 import { Speaker } from '../speaker'
 import { Speech } from '../speech'
@@ -17,26 +18,31 @@ export class SpeechEvaluator {
 
   private _speakersDictionary: { [id: string]: Speaker } = {}
 
-  public AddSpeakerData(data: ICSVSpeech): void {
+  public TryAddSpeakerData(data: ICSVSpeech): void {
     let speaker: Speaker = this._speakersDictionary[data.Speaker]
 
-    if (!speaker) {
-      speaker = new Speaker({ Name: data.Speaker })
-      this._speakersDictionary[data.Speaker] = speaker
-    }
+    try {
+      if (!speaker) {
+        speaker = new Speaker({ Name: data.Speaker })
+        this._speakersDictionary[data.Speaker] = speaker
+      }
 
-    speaker.TryAddSpeech(
-      new Speech({
-        Speaker: data.Speaker,
-        Topic: data.Topic,
-        Date: new Date(data.Date),
-        Words: parseInt(data.Words),
-      }),
-    )
+      speaker.TryAddSpeech(
+        new Speech({
+          Speaker: data.Speaker,
+          Topic: data.Topic,
+          Date: new Date(data.Date),
+          Words: parseInt(data.Words),
+        }),
+      )
+    } catch (error) {
+      Logger.warn(error)
+    }
   }
 
   private GetLeastWordySpeaker(): string {
     const speakers = Object.values(this._speakersDictionary)
+
     if (speakers.length === 0) {
       return null
     }
