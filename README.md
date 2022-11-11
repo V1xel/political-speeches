@@ -3,7 +3,8 @@
 ## Prerequisites
 
 - Docker
-- 3000 port needs to be open or you can change it in .env file
+- 3000 port needs to be open or you can change it in .env file (App)
+- 6379 port needs to be open or you can change it in .env file (Redis)
 
 ## Running the app
 
@@ -43,6 +44,7 @@ $ npm run test:cov
 ## Guide to functionality
 
 Application is running on 3000 port by default, you can change it in .env file
+Application is using Redis, it is running on 6379 by default, you can also change it in .env file
 Errors are written as Warnings in application console.
 
 ### Synchronous way:
