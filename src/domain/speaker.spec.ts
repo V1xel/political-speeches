@@ -15,6 +15,7 @@ interface IPrivateSpeaker {
 }
 
 describe('Speaker', () => {
+  // eslint-disable-next-line prettier/prettier, @typescript-eslint/no-inferrable-types
   const CreateSpeakerFactory = (): IPrivateSpeaker =>
     new Speaker({
       Name: 'Alexander Abel',
@@ -39,6 +40,15 @@ describe('Speaker', () => {
       expect(speaker._wordsTotal).toEqual(0)
       expect(speaker._yearlySpeechesCount).toEqual({})
       expect(Object.keys(speaker._yearlySpeechesCount).length).toEqual(0)
+    })
+
+    it('Speaker have to throw an error after fail validation', () => {
+      const speakerConstructor = (): Speaker =>
+        new Speaker({
+          Name: undefined,
+        })
+
+      expect(speakerConstructor).toThrow()
     })
   })
 

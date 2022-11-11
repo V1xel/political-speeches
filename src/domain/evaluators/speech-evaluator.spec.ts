@@ -10,7 +10,7 @@ interface IPrivateSpeechEvaluator {
   GetMostSecuritySpeaker(): string
   GetMostYearlySpeechesSpeaker(): string
   CheckDataIsValid(data: ICSVSpeech): boolean
-  AddSpeakerData(data: ICSVSpeech)
+  TryAddSpeakerData(data: ICSVSpeech)
   GetResult(): IEvaluationResult
 }
 
@@ -160,7 +160,7 @@ describe('SpeechEvaluator', () => {
       })
     })
 
-    describe('AddSpeakerData', () => {
+    describe('TryAddSpeakerData', () => {
       it('have to add new speakers to the dictionary', () => {
         const evaluator = CreateSpeechEvaluatorFactory()
         const speech: ICSVSpeech = {
@@ -171,7 +171,7 @@ describe('SpeechEvaluator', () => {
         }
 
         const beforeCount = Object.keys(evaluator._speakersDictionary).length
-        evaluator.AddSpeakerData(speech)
+        evaluator.TryAddSpeakerData(speech)
         const afterCount = Object.keys(evaluator._speakersDictionary).length
 
         expect(afterCount).toBe(beforeCount + 1)
@@ -187,14 +187,14 @@ describe('SpeechEvaluator', () => {
         }
 
         const beforeCount = Object.keys(evaluator._speakersDictionary).length
-        evaluator.AddSpeakerData(speech)
-        evaluator.AddSpeakerData(speech)
+        evaluator.TryAddSpeakerData(speech)
+        evaluator.TryAddSpeakerData(speech)
         const afterCount = Object.keys(evaluator._speakersDictionary).length
 
         expect(afterCount).toBe(beforeCount + 1)
       })
 
-      it('have to add speach to speakers', () => {
+      it('have to add speeches to speakers', () => {
         const evaluator = CreateSpeechEvaluatorFactory()
         const speaker = CreateSpeakerFactory('Alexander Abel')
         evaluator._speakersDictionary = {
@@ -214,7 +214,7 @@ describe('SpeechEvaluator', () => {
           Words: '100',
         }
 
-        evaluator.AddSpeakerData(speech)
+        evaluator.TryAddSpeakerData(speech)
 
         expect(TryAddSpeech).toHaveBeenCalled()
       })

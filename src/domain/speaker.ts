@@ -1,4 +1,4 @@
-import DomainError from 'src/errors/domain-error'
+import DomainError from '../errors/domain-error'
 import { Speech } from './speech'
 
 export interface ISpeakerArgs {

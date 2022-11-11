@@ -16,51 +16,70 @@ describe('Speech', () => {
     Words: 12,
   })
 
+  describe('Construction', () => {
+    describe('CheckWordsIsValidOrThrow', () => {
+      it('have to throw an error when words < Speech.MinialAlowedWordsCount', () => {
+        const speechConstructor = (): Speech =>
+          new Speech({
+            Date: new Date('2012-10-10'),
+            Speaker: 'Test',
+            Topic: 'Test',
+            Words: -124,
+          })
+
+        expect(speechConstructor).toThrow()
+      })
+
+      it('have to throw an error when words is not a number', () => {
+        const speechConstructor = (): Speech =>
+          new Speech({
+            Date: new Date('2012-10-10'),
+            Speaker: 'Test',
+            Topic: 'Test',
+            Words: parseInt('aweg'),
+          })
+
+        expect(speechConstructor).toThrow()
+      })
+
+      it('have to throw an error when topic or speaker is undefined', () => {
+        const speechConstructor = (): Speech =>
+          new Speech({
+            Date: new Date('2012-10-10'),
+            Speaker: undefined,
+            Topic: 'Test',
+            Words: parseInt('aweg'),
+          })
+
+        const speechConstructor2 = (): Speech =>
+          new Speech({
+            Date: new Date('2012-10-10'),
+            Speaker: 'Test',
+            Topic: undefined,
+            Words: parseInt('aweg'),
+          })
+
+        expect(speechConstructor).toThrow()
+        expect(speechConstructor2).toThrow()
+      })
+    })
+  })
+
   describe('Functions', () => {
-    it('HasInternalSecurityTopic have to return true when speech has Internal Security topic.', () => {
-      expect(internalSecuritySpeech.HasInternalSecurityTopic()).toBe(true)
+    describe('HasInternalSecurityTopic', () => {
+      it('have to return true when speech has Internal Security topic.', () => {
+        expect(internalSecuritySpeech.HasInternalSecurityTopic()).toBe(true)
+      })
+
+      it('have to return false when speech does not have Internal Security topic.', () => {
+        expect(remoteEducationSpeech.HasInternalSecurityTopic()).toBe(false)
+      })
     })
 
-    it('HasInternalSecurityTopic have to return false when speech does not have Internal Security topic.', () => {
-      expect(remoteEducationSpeech.HasInternalSecurityTopic()).toBe(false)
-    })
-
-    it('GetYear have provide valid integer for test data date', () => {
-      expect(remoteEducationSpeech.GetYear()).toBe(2012)
-    })
-
-    it('CheckSpeechIsValid set speech IsValid to false when object is invalid', () => {
-      const invalidSpeaker = new Speech({
-        Speaker: undefined,
-        Date: new Date('2012-10-30'),
-        Topic: 'Remote Education',
-        Words: 12,
+    describe('GetYear', () => {
+      it('GetYear have provide valid integer for test data date', () => {
+        expect(remoteEducationSpeech.GetYear()).toBe(2012)
       })
-      const invalidDate = new Speech({
-        Speaker: 'Test Speaker',
-        Date: new Date('waeg'),
-        Topic: 'Remote Education',
-        Words: 12,
-      })
-      const invalidTopic = new Speech({
-        Speaker: 'Test Speaker',
-        Date: new Date('2012-10-30'),
-        Topic: undefined,
-        Words: 12,
-      })
-      const invalidWords = new Speech({
-        Speaker: 'Test Speaker',
-        Date: new Date('2012-10-30'),
-        Topic: 'Remote Education',
-        Words: 'aweg' as any,
-      })
-
-      expect(
-        invalidSpeaker.IsValid() &&
-          invalidDate.IsValid() &&
-          invalidTopic.IsValid() &&
-          invalidWords.IsValid(),
-      ).toBeFalsy()
     })
   })
 })
