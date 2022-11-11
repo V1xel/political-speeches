@@ -1,6 +1,5 @@
 import DomainError from '../errors/domain-error'
 import { Speech } from './speech'
-import { Logger } from '@nestjs/common'
 
 export interface ISpeakerArgs {
   Name: string
@@ -11,7 +10,6 @@ export class Speaker {
     this.IsValidOrThrow()
   }
 
-  private _hasAtleastOneSpeech = false
   private _wordsTotal = 0
   private _internalSecurityCount = 0
   private _yearlySpeechesCount: { [id: number]: number } = {}
@@ -29,11 +27,10 @@ export class Speaker {
   }
 
   public get HasAtLeastOneSpeech(): boolean {
-    return this._hasAtleastOneSpeech
+    return Object.keys(this._yearlySpeechesCount).length > 0
   }
 
   public GetYearlySpeechesCount(year: number): number {
-    this._hasAtleastOneSpeech = true
     return this._yearlySpeechesCount[year]
   }
 
@@ -69,7 +66,6 @@ export class Speaker {
   }
 
   public TryAddSpeech(speech: Speech): void {
-    Logger.log(speech)
     this.AddYearlySpeech(speech)
     this.IncrementInternalSecurityCount(speech)
     this.IncrementWordsTotal(speech)

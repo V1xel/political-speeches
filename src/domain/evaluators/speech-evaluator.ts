@@ -42,12 +42,12 @@ export class SpeechEvaluator {
 
   private GetLeastWordySpeaker(): string {
     const speakers = Object.values(this._speakersDictionary)
-    const filter = speakers.filter((s: Speaker) => s.HasAtLeastOneSpeech)
-    if (filter.length === 0) {
+    const filtered = speakers.filter((s: Speaker) => s.HasAtLeastOneSpeech)
+    if (filtered.length === 0) {
       return null
     }
 
-    const sorted = speakers.sort((a, b) => a.WordsTotal - b.WordsTotal)
+    const sorted = filtered.sort((a, b) => a.WordsTotal - b.WordsTotal)
     return sorted.at(0).Name
   }
 

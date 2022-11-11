@@ -18,7 +18,6 @@ interface IPrivateSpeaker {
   _wordsTotal: number
   _internalSecurityCount: number
   _yearlySpeechesCount: { [id: number]: number }
-  _hasAtleastOneSpeech: boolean
 }
 
 describe('SpeechEvaluator', () => {
@@ -38,11 +37,15 @@ describe('SpeechEvaluator', () => {
         const evaluator = CreateSpeechEvaluatorFactory()
         const speaker = CreateSpeakerFactory('Alexander Abel')
         speaker._wordsTotal = 20
-        speaker._hasAtleastOneSpeech = true
+        speaker._yearlySpeechesCount = {
+          2012: 1,
+        }
 
         const speaker2 = CreateSpeakerFactory('Volodymyr Abel')
         speaker2._wordsTotal = 2000
-        speaker2._hasAtleastOneSpeech = true
+        speaker2._yearlySpeechesCount = {
+          2012: 1,
+        }
 
         evaluator._speakersDictionary = {
           'Alexander Abel': speaker as any as Speaker,
