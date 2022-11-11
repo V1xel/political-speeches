@@ -9,7 +9,6 @@ services:
     volumes:
       - .:/app/src/service
       - /app/src/service/node_modules
-      - /app/src/service/tmp
     ports:
       - 3000:3000
     networks:
