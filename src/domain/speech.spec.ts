@@ -56,10 +56,10 @@ describe('Speech', () => {
       })
 
       expect(
-        invalidSpeaker.IsValid &&
-          invalidDate.IsValid &&
-          invalidTopic.IsValid &&
-          invalidWords.IsValid,
+        invalidSpeaker.IsValid() &&
+          invalidDate.IsValid() &&
+          invalidTopic.IsValid() &&
+          invalidWords.IsValid(),
       ).toBeFalsy()
     })
   })

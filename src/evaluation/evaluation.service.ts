@@ -5,7 +5,6 @@ import { SpeechEvaluator } from 'src/domain/evaluators/speech-evaluator'
 import { v4 as uuidv4 } from 'uuid'
 import IQueueElement from 'src/interfaces/queue-element'
 import IEvaluationResult from 'src/interfaces/evaluation-result'
-import CSVLoader from 'src/utilities/csv-loader'
 import CSVParser from 'src/utilities/csv-parser'
 import ICSVSpeech from 'src/interfaces/csv-speech'
 
@@ -21,16 +20,12 @@ export class EvaluationService {
   }
 
   async evaluate(urls: string[], year: number): Promise<IEvaluationResult> {
-    const filePathes = await CSVLoader.load(urls)
-
     const evaluator = new SpeechEvaluator({ YearForSpeechesCount: year })
-    for (const filePath of filePathes) {
-      await CSVParser.parse<ICSVSpeech>(filePath, (data) =>
+    for (const url of urls) {
+      await CSVParser.parse<ICSVSpeech>(url, (data) =>
         evaluator.AddSpeakerData(data),
       )
     }
-
-    await CSVLoader.clear()
 
     return evaluator.GetResult()
   }

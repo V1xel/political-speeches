@@ -47,7 +47,7 @@ export class Speaker {
   }
 
   public TryAddSpeech(speech: Speech): void {
-    if (!speech.IsValid) return
+    if (!speech.IsValid()) return
 
     this.AddYearlySpeech(speech)
     this.IncrementInternalSecurityCount(speech)

@@ -1,21 +1,28 @@
 import * as fs from 'fs'
 import * as csv from 'csv-parser'
 import CSVHelper from './csv-helper'
+import { Axios, AxiosResponse } from 'axios'
+import { Logger } from '@nestjs/common'
 
 export default class CSVParser {
   static async parse<T>(
-    path: string,
+    url: string,
     onDataCallback: (data: T) => void,
   ): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      fs.createReadStream(path)
-        .pipe(csv())
-        .on('error', (error) => reject(error))
-        .on('data', (rawData) => {
-          const sanitizedData = CSVHelper.sanitizeProperties(rawData)
-          onDataCallback(sanitizedData)
-        })
-        .on('end', () => resolve())
-    })
+    const parseStream = async (response: AxiosResponse): Promise<void> =>
+      new Promise<void>((resolve, reject) =>
+        response.data
+          .pipe(csv())
+          .on('error', (error) => reject(error))
+          .on('data', (rawData) =>
+            onDataCallback(CSVHelper.sanitizeProperties(rawData)),
+          )
+          .on('end', () => resolve()),
+      )
+
+    return await new Axios({ responseType: 'stream' })
+      .get(url)
+      .then((response) => parseStream(response))
+      .catch((error) => Logger.warn(error))
   }
 }

@@ -7,10 +7,7 @@ export interface ISpeechArgs {
 
 export class Speech {
   public static readonly InternalSecurity = 'Internal Security'
-  public IsValid: boolean
-  constructor(private _args: ISpeechArgs) {
-    this.IsValid = this.CheckSpeechIsValid()
-  }
+  constructor(private _args: ISpeechArgs) {}
 
   public get Speaker(): string {
     return this._args.Speaker
@@ -43,7 +40,7 @@ export class Speech {
     return !isNaN(words)
   }
 
-  private CheckSpeechIsValid(): boolean {
+  public IsValid(): boolean {
     const hasUndefinedFields = !this._args.Speaker || !this._args.Topic
     const dateIsValid = this.CheckDateIsValid()
     const wordsIsValid = this.CheckWordsIsValid()

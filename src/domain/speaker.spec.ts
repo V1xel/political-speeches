@@ -138,33 +138,5 @@ describe('Speaker', () => {
       expect(IncrementInternalSecurityCount).toHaveBeenCalled()
       expect(IncrementWordsTotal).toHaveBeenCalled()
     })
-
-    it('AddSpeech should not call logic for invalid speech', () => {
-      const speaker = CreateSpeakerFactory()
-      const speech = CreateSpeechFactory()
-      speech.IsValid = false
-
-      const AddYearlySpeech = jest.spyOn(
-        Speaker.prototype as any,
-        'AddYearlySpeech',
-      )
-      const IncrementInternalSecurityCount = jest.spyOn(
-        Speaker.prototype as any,
-        'IncrementInternalSecurityCount',
-      )
-      const IncrementWordsTotal = jest.spyOn(
-        Speaker.prototype as any,
-        'IncrementWordsTotal',
-      )
-      AddYearlySpeech.mockImplementation(() => null)
-      IncrementInternalSecurityCount.mockImplementation(() => null)
-      IncrementWordsTotal.mockImplementation(() => null)
-
-      speaker.TryAddSpeech(speech)
-
-      expect(AddYearlySpeech).toHaveBeenCalledTimes(0)
-      expect(IncrementInternalSecurityCount).toHaveBeenCalledTimes(0)
-      expect(IncrementWordsTotal).toHaveBeenCalledTimes(0)
-    })
   })
 })
