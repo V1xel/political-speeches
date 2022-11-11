@@ -43,6 +43,7 @@ $ npm run test:cov
 ## Guide to functionality
 
 Application is running on 3000 port by default, you can change it in .env file
+Errors are written as Warnings in application console.
 
 ### Synchronous way:
 - make GET request to http://localhost:3000/evaluation
