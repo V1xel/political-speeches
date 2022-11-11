@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - Docker
-- 3000 port needs to be open
+- 3000 port needs to be open or you can change it in .env file
 
 ## Running the app
 
@@ -42,7 +42,7 @@ $ npm run test:cov
 
 ## Guide to functionality
 
-Application is running on 3000 port
+Application is running on 3000 port by default, you can change it in .env file
 
 ### Synchronous way:
 - make GET request to http://localhost:3000/evaluation

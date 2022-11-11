@@ -13,7 +13,7 @@ async function bootstrap(): Promise<void> {
       transformOptions: { enableImplicitConversion: true },
     }),
   )
-  await app.listen(3000)
+  await app.listen(process.env.APP_PORT)
 }
 
 bootstrap()
