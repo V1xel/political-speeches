@@ -1,4 +1,3 @@
-import * as fs from 'fs'
 import * as csv from 'csv-parser'
 import CSVHelper from './csv-helper'
 import { Axios, AxiosResponse } from 'axios'
