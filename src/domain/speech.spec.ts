@@ -18,6 +18,18 @@ describe('Speech', () => {
 
   describe('Construction', () => {
     describe('CheckWordsIsValidOrThrow', () => {
+      it('have to throw an error when the date is invalid', () => {
+        const speechConstructor = (): Speech =>
+          new Speech({
+            Date: new Date('aweg'),
+            Speaker: 'Test',
+            Topic: 'Test',
+            Words: 124,
+          })
+
+        expect(speechConstructor).toThrow()
+      })
+
       it('have to throw an error when words < Speech.MinialAlowedWordsCount', () => {
         const speechConstructor = (): Speech =>
           new Speech({

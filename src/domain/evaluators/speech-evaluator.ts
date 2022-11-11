@@ -42,8 +42,8 @@ export class SpeechEvaluator {
 
   private GetLeastWordySpeaker(): string {
     const speakers = Object.values(this._speakersDictionary)
-
-    if (speakers.length === 0) {
+    const filter = speakers.filter((s: Speaker) => s.HasAtLeastOneSpeech)
+    if (filter.length === 0) {
       return null
     }
 

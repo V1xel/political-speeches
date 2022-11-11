@@ -48,9 +48,15 @@ export class Speech {
     this.CheckWordsIsValidOrThrow()
   }
 
-  private CheckDateIsValidOrThrow(): boolean {
+  private CheckDateIsValidOrThrow(): void {
     const date = this._args.Date
-    return date instanceof Date && !isNaN(date.getTime())
+
+    if (!(date instanceof Date) || isNaN(date.getTime())) {
+      throw new DomainError(
+        'Speech argument Date is invalid, this speech will be skipped.',
+        this._args,
+      )
+    }
   }
 
   private CheckWordsIsValidOrThrow(): void {
