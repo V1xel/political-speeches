@@ -10,7 +10,7 @@ services:
       - .:/app/src/service
       - /app/src/service/node_modules
     ports:
-      - 3000:3000
+      - ${APP_PORT}:${APP_PORT}
     networks:
       - redis
     depends_on:
@@ -26,11 +26,12 @@ services:
       - -c
       - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
     environment:
+      REDIS_PORT: ${REDIS_PORT}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     networks:
       - redis
-    ports:
-      - "6379:${REDIS_PORT}"
+    expose:
+      - ${REDIS_PORT}
     env_file:
       - .env
 

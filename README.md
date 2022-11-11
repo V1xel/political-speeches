@@ -4,7 +4,7 @@
 
 - Docker
 - 3000 port needs to be open or you can change it in .env file (App)
-- 6379 port needs to be open or you can change it in .env file (Redis)
+- urls for CSVs need to be not localhost or 127.0.0.1 but something like 192.168.0... or domain name from the internet.
 
 ## Running the app
 
